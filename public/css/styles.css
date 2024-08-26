@@ -1,0 +1,13 @@
+.gallery-item {
+  width: 300px;
+  height: 200px;
+  padding: 5px;
+  margin: 5px;
+  border: 1px solid black;
+}
+
+.gallery-item:hover {
+  cursor: pointer;
+  transform: scale(2);
+  transition: all 0.2s;
+}
