@@ -4,10 +4,14 @@ const app = express();
 const path = require("path");
 const fs = require("fs");
 const multer = require("multer");
-const checkPass = require("./middleware/checkPass");
+const cors = require("cors");
 dotenv.config();
 
+app.use(cors());
 app.use(express.json());
+
+// Middleware to parse form data
+app.use(express.urlencoded({ extended: true }));
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -39,29 +43,8 @@ app.set("views", path.join(__dirname, "views"));
 
 app.use(express.static(path.join(__dirname, "public")));
 
-app.post("/", (req, res) => {
-  const { password } = req.body;
-  const adminPassword = process.env.PASSWORD;
-
-  if (password === adminPassword) {
-    upload.single("myImg");
-
-    fs.readdir(path.join(__dirname, "public/img"), (err, files) => {
-      if (err) {
-        return res.status(500).send("Unable to scan directory");
-      }
-      // Filter only image files
-      const images = files;
-      res.render("index.ejs", {
-        images: images,
-        adminPassword: process.env.PASSWORD,
-        errorMessage: null,
-        success: true,
-      });
-    });
-  } else {
-    res.render("index.ejs", { success: false });
-  }
+app.post("/", upload.single("myImg"), (req, res) => {
+  res.redirect("/");
 });
 
 // Render the home page with the gallery
@@ -72,6 +55,9 @@ app.get("/", (req, res) => {
     }
     // Filter only image files
     const images = files;
+    if (!images) {
+      res.render("index.js", { msg: "No images" });
+    }
     res.render("index.ejs", {
       images: images,
       adminPassword: process.env.PASSWORD,

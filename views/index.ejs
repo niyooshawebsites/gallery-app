@@ -14,31 +14,15 @@
   </head>
   <body class="container p-5">
     <% if(success) {%>
-    <form action="/" method="POST" enctype="multipart/form-data">
+    <form method="POST" enctype="multipart/form-data" onsubmit="verification()">
       <div class="row">
-        <div class="col-md-5">
+        <div class="col-md-10">
           <div class="form-group">
             <input type="file" name="myImg" class="form-control" required />
           </div>
         </div>
-        <div class="col-md-5">
-          <div class="form-group">
-            <input
-              type="password"
-              class="form-control"
-              placeholder="Enter password"
-              id="pass"
-              required
-            />
-          </div>
-        </div>
         <div class="col-md-2">
-          <input
-            type="submit"
-            value="Upload"
-            class="btn btn-primary"
-            onclick="verification()"
-          />
+          <input type="submit" value="Upload" class="btn btn-primary" />
         </div>
       </div>
     </form>
@@ -47,7 +31,12 @@
     <%} %>
 
     <section class="mt-5">
+      <h1 class="text-center">Gallery</h1>
       <div class="container mx-auto">
+        <% if(!images){%>
+        <h1><%= msg %></h1>
+        <% } %>
+        <br />
         <% images?.reverse()?.forEach(image => { %>
         <img src="/img/<%= image %>" alt="Image" class="gallery-item" />
         <% }) %>
@@ -58,23 +47,5 @@
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
-    <script>
-      const password = document.querySelector("#pass").value || "";
-      const verification = () => {
-        const apiCall = async () => {
-          await fetch("/", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ password }),
-          })
-            .then((res) => console.log(res))
-            .catch((err) => console.log(err));
-        };
-
-        apiCall();
-      };
-    </script>
   </body>
 </html>
